@@ -1,18 +1,22 @@
 # 由于函数也是一个对象，而且函数对象可以被赋值给变量，所以，通过变量也能调用该函数
 
 
+import functools
+
+
 # def now(a):
 #     print(a, '2019-2-22')
 #
 #
 
+
 # f = now
-# f(a)
+# f('a')
 #
 #
 # # 函数对象有一个__name__属性，可以拿到函数的名字：
-# print('now', now.__name__)
-# print('f', f.__name__)
+# print('now', now.__name__) --> 'now'
+# print('f', f.__name__) --> 'now'
 
 
 # 现在，假设我们要增强now()函数的功能，比如，在函数调用前后自动打印日志，但又不希望修改now()函数的定义，这种在代码运行期间动态增加功能的方式，称之为“装饰器(Decorator)”。
@@ -35,10 +39,18 @@
 # @log
 # def now(a):
 #     print(a, '2019-02-22')
-#
-#
+
+
 # a = 'hello'
-# now(a)
+# now(a) --> 'call now: hello 2019-02-22'
+
+"""
+解析：
+wrapper(*args, **kw)：接受任意个参数、任意关键字参数，print(func.__name__)，返回 func(*args, **kw)
+log(func)：返回 wrapper
+
+39-41行等价于log(now)
+"""
 
 
 # 把@log 放到 now() 函数的定义处，相当于执行了语句：
@@ -79,7 +91,6 @@
 # 因为返回的那个wrapper()函数名字就是'wrapper'，所以，需要把原始函数的__name__等属性也复制到wrapper函数中，否则，有些依赖函数签名的代码会出错。
 
 # 不需要编写wrapper.__name__ = func.__name__，Python内置的functiontools.wraps就是就是干这个事的，所以，一个完整的decorator的写法如下：
-import functools
 
 
 def log(func):
